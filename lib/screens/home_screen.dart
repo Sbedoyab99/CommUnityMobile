@@ -1,3 +1,4 @@
+import 'package:community/layout/common_layout.dart';
 import 'package:community/models/News.dart';
 import 'package:community/models/User.dart';
 import 'package:community/services/news_service.dart';
@@ -62,38 +63,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
-        child: AppBar(
-          backgroundColor: Colors.deepPurple,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(
-              top: 40.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.person),
-                  color: Colors.white,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+    return CommonLayout(
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
@@ -149,36 +119,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-      bottomNavigationBar: SafeArea(
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Visitas',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.mail),
-              label: 'Correspondencia',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.note_add),
-              label: 'PQRS',
-            ),
-          ],
-          onTap: (index) {
-            if (index == 2) {
-              Navigator.pushNamed(context, '/settings');
-            }
-          },
-        ),
-      ),
     );
   }
 }
