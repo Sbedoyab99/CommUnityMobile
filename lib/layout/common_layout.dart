@@ -1,4 +1,5 @@
 import 'package:community/models/User.dart';
+import 'package:community/providers/user_provider.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +55,12 @@ class _CommonLayoutState extends State<CommonLayout> {
     return user;
   }
 
+  void navigateIfNotCurrentRoute(String route) {
+    if (ModalRoute.of(context)!.settings.name != route) {
+      Navigator.pushNamed(context, route);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +87,7 @@ class _CommonLayoutState extends State<CommonLayout> {
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/apartment');
+                    navigateIfNotCurrentRoute('/apartment');
                   },
                   icon: const Icon(Icons.person),
                   color: Colors.white,
@@ -90,7 +97,14 @@ class _CommonLayoutState extends State<CommonLayout> {
           ),
         ),
       ),
-      body: widget.body,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : UserProvider(
+              user: user,
+              child: widget.body,
+            ),
       bottomNavigationBar: SafeArea(
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -115,8 +129,8 @@ class _CommonLayoutState extends State<CommonLayout> {
             ),
           ],
           onTap: (index) {
-            if (index == 2) {
-              Navigator.pushNamed(context, '/settings');
+            if (index == 0) {
+              navigateIfNotCurrentRoute('/home');
             }
           },
         ),
