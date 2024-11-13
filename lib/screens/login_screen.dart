@@ -31,8 +31,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (token != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inicio de sesion exitoso'))
-      );
+          const SnackBar(content: Text('Inicio de sesion exitoso')));
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -44,6 +43,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -73,9 +73,9 @@ class LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-              onPressed: _login,
-              child: const Text('Iniciar sesión'),
-            ),
+                    onPressed: _login,
+                    child: const Text('Iniciar sesión'),
+                  ),
           ],
         ),
       ),

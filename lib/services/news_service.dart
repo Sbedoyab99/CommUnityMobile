@@ -6,8 +6,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class NewsService {
   final String apiUrl = 'https://communitybackend.azurewebsites.net/api/news';
 
-  Future<List<News>> fetchNews(String token, int residentialUnitId) async {
-
+  Future<List<News>> fetchNews(String token, num residentialUnitId) async {
     final response = await http.get(
       Uri.parse('$apiUrl?id=$residentialUnitId&page=1&recordsnumber=5'),
       headers: {
