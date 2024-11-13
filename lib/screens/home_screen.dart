@@ -63,62 +63,57 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return CommonLayout(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RefreshIndicator(
-                  onRefresh: loadAsync,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: news.length,
-                    itemBuilder: (context, index) {
-                      final newsItem = news[index];
-                      return Card(
-                        margin: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            newsItem.picture != null
-                                ? Image.network(
-                                    newsItem.picture!,
-                                    fit: BoxFit.contain,
-                                  )
-                                : Image.asset(
-                                    'assets/defaultImage.avif',
-                                    fit: BoxFit.cover,
-                                  ),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                newsItem.title!,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RefreshIndicator(
+                onRefresh: loadAsync,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: news.length,
+                  itemBuilder: (context, index) {
+                    final newsItem = news[index];
+                    return Card(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          newsItem.picture != null
+                              ? Image.network(
+                                  newsItem.picture!,
+                                  fit: BoxFit.contain,
+                                )
+                              : Image.asset(
+                                  'assets/defaultImage.avif',
+                                  fit: BoxFit.cover,
                                 ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              newsItem.title!,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                newsItem.content!.characters
-                                    .take(100)
-                                    .toString(),
-                                style: const TextStyle(fontSize: 14),
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              newsItem.content!.characters.take(100).toString(),
+                              style: const TextStyle(fontSize: 14),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
-    );
+          );
   }
 }

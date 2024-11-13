@@ -1,13 +1,13 @@
 import 'package:community/models/User.dart';
 import 'package:community/providers/user_provider.dart';
+import 'package:community/screens/apartment_screen.dart';
+import 'package:community/screens/home_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CommonLayout extends StatefulWidget {
-  const CommonLayout({super.key, required this.body});
-
-  final Widget body;
+  const CommonLayout({super.key});
 
   @override
   State<CommonLayout> createState() => _CommonLayoutState();
@@ -17,6 +17,12 @@ class _CommonLayoutState extends State<CommonLayout> {
   String? token;
   bool isLoading = true;
   User? user;
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomePage(),
+    const ApartmentScreen(),
+  ];
 
   late final Widget body;
 
@@ -61,78 +67,92 @@ class _CommonLayoutState extends State<CommonLayout> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
-        child: AppBar(
-          backgroundColor: Colors.deepPurple,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(
-              top: 40.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+    return PopScope(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.deepPurple,
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.only(
+                top: 40.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    navigateIfNotCurrentRoute('/apartment');
-                  },
-                  icon: const Icon(Icons.person),
-                  color: Colors.white,
-                )
-              ],
+                  IconButton(
+                    onPressed: () {
+                      if (_selectedIndex != 1) {
+                        _onItemTapped(1);
+                      }
+                    },
+                    icon: const Icon(Icons.person),
+                    color: Colors.white,
+                  )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : UserProvider(
-              user: user,
-              child: widget.body,
-            ),
-      bottomNavigationBar: SafeArea(
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Visitas',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.mail),
-              label: 'Correspondencia',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.note_add),
-              label: 'PQRS',
-            ),
-          ],
-          onTap: (index) {
-            if (index == 0) {
-              navigateIfNotCurrentRoute('/home');
-            }
-          },
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : UserProvider(
+                user: user,
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: _pages,
+                ),
+              ),
+        bottomNavigationBar: SafeArea(
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: 'Visitas',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.mail),
+                label: 'Correspondencia',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.note_add),
+                label: 'PQRS',
+              ),
+            ],
+            onTap: (index) {
+              if (_selectedIndex != 0) {
+                _onItemTapped(0);
+              }
+            },
+          ),
         ),
       ),
     );

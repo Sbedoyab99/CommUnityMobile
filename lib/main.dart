@@ -1,3 +1,4 @@
+import 'package:community/layout/common_layout.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
 import 'package:community/screens/login_screen.dart';
@@ -18,8 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
-        '/home': (context) => const HomePage(),
-        '/apartment': (context) => const ApartmentScreen(),
+        '/home': (context) => const CommonLayout(),
       },
     );
   }
