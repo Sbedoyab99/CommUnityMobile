@@ -1,4 +1,3 @@
-import 'package:community/layout/common_layout.dart';
 import 'package:community/models/News.dart';
 import 'package:community/models/User.dart';
 import 'package:community/services/news_service.dart';
