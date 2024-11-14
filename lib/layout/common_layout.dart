@@ -19,6 +19,11 @@ class _CommonLayoutState extends State<CommonLayout> {
   User? user;
   int _selectedIndex = 0;
 
+  final List<String> _routes = [
+    '/home',
+    '/apartment',
+  ];
+
   final List<Widget> _pages = [
     const HomePage(),
     const ApartmentScreen(),
@@ -75,84 +80,97 @@ class _CommonLayoutState extends State<CommonLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.deepPurple,
-            flexibleSpace: Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
-                left: 16.0,
-                right: 16.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (_selectedIndex != 1) {
-                        _onItemTapped(1);
-                      }
-                    },
-                    icon: const Icon(Icons.person),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.deepPurple,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(
+              top: 40.0,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
+                  style: const TextStyle(
                     color: Colors.white,
-                  )
-                ],
-              ),
+                    fontSize: 20,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (_selectedIndex != _pages.length - 1) {
+                      _onItemTapped(_pages.length - 1);
+                    }
+                  },
+                  icon: const Icon(Icons.person),
+                  color: Colors.white,
+                )
+              ],
             ),
           ),
         ),
-        body: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : UserProvider(
-                user: user,
-                child: IndexedStack(
-                  index: _selectedIndex,
-                  children: _pages,
-                ),
+      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : UserProvider(
+              user: user,
+              child: Navigator(
+                key: GlobalKey<NavigatorState>(),
+                initialRoute: _routes[_selectedIndex],
+                onGenerateRoute: (settings) {
+                  WidgetBuilder builder;
+                  switch (settings.name) {
+                    case '/home':
+                      builder = (context) => const HomePage();
+                      break;
+                    case '/apartment':
+                      builder = (context) => const ApartmentScreen();
+                      break;
+                    default:
+                      builder = (BuildContext _) => const HomePage();
+                  }
+                  return MaterialPageRoute(
+                      builder: builder, settings: settings);
+                },
               ),
-        bottomNavigationBar: SafeArea(
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.people),
-                label: 'Visitas',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.mail),
-                label: 'Correspondencia',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.note_add),
-                label: 'PQRS',
-              ),
-            ],
-            onTap: (index) {
-              if (_selectedIndex != 0) {
-                _onItemTapped(0);
-              }
-            },
-          ),
+            ),
+      bottomNavigationBar: SafeArea(
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Visitas',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.mail),
+              label: 'Correspondencia',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.note_add),
+              label: 'PQRS',
+            ),
+          ],
+          onTap: (index) {
+            if (_selectedIndex != index) {
+              _onItemTapped(index);
+            }
+          },
         ),
       ),
     );
