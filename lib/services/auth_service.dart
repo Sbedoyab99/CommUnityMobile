@@ -21,12 +21,21 @@ class AuthService {
 
         return token;
       } else {
-        print('Error en el inicio de sesión: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Error de red: $e');
       return null;
+    }
+  }
+
+  Future<void> logOut() async {
+    print('Aqui estoy!!!!!!!!!!!!!');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('authToken');
+      print('Supuestamente cerre sesion');
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -40,38 +49,31 @@ class AuthService {
         final User user = User.fromJson(data);
         return user;
       } else {
-        print('Error: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Error de red: $e');
       return null;
     }
   }
 
   Future<bool> editUser(User? user, String token) async {
     final UserDTO userdto = UserDTO(
-      FirstName: user!.firstName,
-      LastName: user.lastName,
-      PhoneNumber: user.phoneNumber,
-      Address: user.address,
-      Document: user.document,
-      CityId: user.cityId,
-      ResidentialUnitId: user.residentialUnitId,
-      ApartmentId: user.apartmentId,
-      UserType: user.userType
-    );
-    print('Nombre Editado: ${userdto.FirstName}');
-    final response = await http.put(
-        Uri.parse('$_baseUrl/accounts'),
+        FirstName: user!.firstName,
+        LastName: user.lastName,
+        PhoneNumber: user.phoneNumber,
+        Address: user.address,
+        Document: user.document,
+        CityId: user.cityId,
+        ResidentialUnitId: user.residentialUnitId,
+        ApartmentId: user.apartmentId,
+        UserType: user.userType);
+    final response = await http.put(Uri.parse('$_baseUrl/accounts'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode(userdto)
-    );
-    print('Status Code: ${response.statusCode}');
-    if(response.statusCode == 200) {
+        body: jsonEncode(userdto));
+    if (response.statusCode == 200) {
       return true;
     }
     return false;

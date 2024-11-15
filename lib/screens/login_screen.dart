@@ -1,5 +1,6 @@
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +15,20 @@ class LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
 
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadToken();
+  }
+
+  Future<void> loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
+    if (token != null) {
+      navigate();
+    }
+  }
 
   Future<void> _login() async {
     setState(() {
@@ -30,14 +45,20 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     if (token != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Inicio de sesion exitoso')));
-      Navigator.pushReplacementNamed(context, '/home');
+      showSnackBar('Inicio de sesion exitoso');
+      navigate();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al iniciar sesión')),
-      );
+      showSnackBar('Error al iniciar sesión');
     }
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void navigate() {
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override

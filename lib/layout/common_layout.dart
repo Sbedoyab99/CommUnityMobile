@@ -14,20 +14,16 @@ class CommonLayout extends StatefulWidget {
 }
 
 class _CommonLayoutState extends State<CommonLayout> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   String? token;
   bool isLoading = true;
   User? user;
   int _selectedIndex = 0;
 
-  final List<String> _routes = [
-    '/home',
-    '/apartment',
-  ];
-
-  final List<Widget> _pages = [
-    const HomePage(),
-    const ApartmentScreen(),
-  ];
+  final Map<int, String> _routes = {
+    0: '/home',
+    1: '/apartment',
+  };
 
   late final Widget body;
 
@@ -66,6 +62,10 @@ class _CommonLayoutState extends State<CommonLayout> {
     return user;
   }
 
+  void navigateLogOut(String route) {
+    Navigator.pushReplacementNamed(context, route);
+  }
+
   void navigateIfNotCurrentRoute(String route) {
     if (ModalRoute.of(context)!.settings.name != route) {
       Navigator.pushNamed(context, route);
@@ -76,6 +76,39 @@ class _CommonLayoutState extends State<CommonLayout> {
     setState(() {
       _selectedIndex = index;
     });
+    _navigatorKey.currentState
+        ?.pushNamedAndRemoveUntil(_routes[index]!, (route) => false);
+  }
+
+  Future<void> logout() async {
+    await _authService.logOut();
+    navigateLogOut('/login');
+  }
+
+  void _openLogOutModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Estas seguro?'),
+          content: const Text('Deseas cerrar sesión?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                logout();
+              },
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -85,7 +118,7 @@ class _CommonLayoutState extends State<CommonLayout> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           backgroundColor: Colors.deepPurple,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(
@@ -96,22 +129,29 @@ class _CommonLayoutState extends State<CommonLayout> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                Expanded(
+                  child: Text(
+                    isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_selectedIndex != _pages.length - 1) {
-                      _onItemTapped(_pages.length - 1);
+                    if (_selectedIndex != 1) {
+                      _onItemTapped(1);
                     }
                   },
                   icon: const Icon(Icons.person),
                   color: Colors.white,
-                )
+                ),
+                IconButton(
+                  onPressed: () => _openLogOutModal(context),
+                  icon: const Icon(Icons.logout),
+                  color: Colors.white,
+                ),
               ],
             ),
           ),
