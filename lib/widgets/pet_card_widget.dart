@@ -1,13 +1,12 @@
-import 'package:community/models/User.dart';
+import 'package:community/models/Pet.dart';
 import 'package:flutter/material.dart';
 
-class UserCard extends StatelessWidget {
-  const UserCard(
-      {super.key, required this.user, this.isUser = false, this.onEdit});
+class PetCard extends StatelessWidget {
+  final Pet pet;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  final User? user;
-  final bool isUser;
-  final VoidCallback? onEdit;
+  const PetCard({super.key, required this.pet, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +21,10 @@ class UserCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundImage: user?.photo != null
-                  ? NetworkImage(user?.photo)
+              backgroundImage: pet.picture != null
+                  ? NetworkImage(
+                  pet.picture
+              )
                   : const AssetImage('assets/defaultImage.avif'),
             ),
             const SizedBox(width: 16),
@@ -32,7 +33,7 @@ class UserCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${user?.firstName} ${user?.lastName}',
+                    pet.name ?? 'Nombre',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -40,15 +41,7 @@ class UserCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    user?.email ?? 'Email del usuario',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    user?.phoneNumber ?? 'Telefono del usuario',
+                    pet.breed ?? 'Tipo',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -57,15 +50,21 @@ class UserCard extends StatelessWidget {
                 ],
               ),
             ),
-            isUser
-                ? IconButton(
-                    onPressed: onEdit ?? () {},
-                    icon: const Icon(Icons.edit, color: Colors.amber),
-                  )
-                : const SizedBox.shrink(),
+            
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.amber),
+              tooltip: 'Editar',
+              onPressed: onEdit,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              tooltip: 'Eliminar',
+              onPressed: onDelete,
+            ),
           ],
         ),
       ),
     );
   }
 }
+

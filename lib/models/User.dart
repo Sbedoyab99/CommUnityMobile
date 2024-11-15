@@ -223,6 +223,10 @@ User copyWith({  String? document,
   bool? get lockoutEnabled => _lockoutEnabled;
   num? get accessFailedCount => _accessFailedCount;
 
+  set firstName(String? value) => _firstName = value;
+  set lastName(String? value) => _lastName = value;
+  set phoneNumber(String? value) => _phoneNumber = value;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['document'] = _document;

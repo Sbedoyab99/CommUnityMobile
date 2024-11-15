@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:community/dto/user_dto.dart';
 import 'package:community/models/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,5 +47,33 @@ class AuthService {
       print('Error de red: $e');
       return null;
     }
+  }
+
+  Future<bool> editUser(User? user, String token) async {
+    final UserDTO userdto = UserDTO(
+      FirstName: user!.firstName,
+      LastName: user.lastName,
+      PhoneNumber: user.phoneNumber,
+      Address: user.address,
+      Document: user.document,
+      CityId: user.cityId,
+      ResidentialUnitId: user.residentialUnitId,
+      ApartmentId: user.apartmentId,
+      UserType: user.userType
+    );
+    print('Nombre Editado: ${userdto.FirstName}');
+    final response = await http.put(
+        Uri.parse('$_baseUrl/accounts'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(userdto)
+    );
+    print('Status Code: ${response.statusCode}');
+    if(response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 }

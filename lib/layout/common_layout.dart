@@ -148,6 +148,7 @@ class _CommonLayoutState extends State<CommonLayout> {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          currentIndex: _selectedIndex,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
