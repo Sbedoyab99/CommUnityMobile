@@ -1,6 +1,4 @@
 import 'package:community/layout/common_layout.dart';
-import 'package:community/screens/apartment_screen.dart';
-import 'package:community/screens/home_screen.dart';
 import 'package:community/screens/login_screen.dart';
 import 'package:community/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
