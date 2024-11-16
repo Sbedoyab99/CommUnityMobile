@@ -14,7 +14,7 @@ class MailService {
 
     final response = await http.get(
       Uri.parse(
-          '$apiUrl/MailApartmentStatus?id=$apartmentId&status=$status&page=$page&recordsnumber=2'),
+          '$apiUrl/MailApartmentStatus?id=$apartmentId&status=$status&page=$page&recordsnumber=5'),
       headers: {
         'Authorization': 'Bearer $token',
       },

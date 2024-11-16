@@ -93,7 +93,12 @@ class _MailScreenState extends State<MailScreen> {
         List<Mail> newMails = await _mailService.fetchMail(
             token!, user!.apartmentId!, filterValue,
             page: currentPage);
-        mails.addAll(newMails);
+
+        if (newMails.length == 0) {
+          currentPage = currentPage - 1;
+        } else {
+          mails.addAll(newMails);
+        }
       }
       setState(() {
         isLoading = false;
@@ -114,132 +119,215 @@ class _MailScreenState extends State<MailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.purple.shade100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Correspondencia",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            currentPage = 1;
+          });
+          await loadMail();
+        },
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.purple.shade100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Icon(
+                    Icons.mail,
                     color: Colors.white,
+                    size: 24,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DropdownMenu<String>(
-                    initialSelection: dropdownItems.first['value']!,
-                    onSelected: (String? value) {
-                      if (value != null) {
-                        setState(() {
-                          filterValue = value;
-                          currentPage = 1;
-                        });
-                        loadMail();
-                      }
-                    },
-                    dropdownMenuEntries: dropdownItems
-                        .map((item) => DropdownMenuEntry<String>(
-                              value: item['value']!,
-                              label: item['label']!,
-                            ))
-                        .toList(),
+                  const Text(
+                    "Correspondencia",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownMenu<String>(
+                      label: const Text('Estado'),
+                      initialSelection: dropdownItems.first['value']!,
+                      onSelected: (String? value) {
+                        if (value != null) {
+                          setState(() {
+                            filterValue = value;
+                            currentPage = 1;
+                          });
+                          loadMail();
+                        }
+                      },
+                      dropdownMenuEntries: dropdownItems
+                          .map((item) => DropdownMenuEntry<String>(
+                                value: item['value']!,
+                                label: item['label']!,
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                  ),
-                )
-              : mails.isEmpty
-                  ? const Center(
-                      child: Text('No hay correspondencia para mostrar'))
-                  : Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: ListView.separated(
-                          itemCount:
-                              mails.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < mails.length) {
-                              final mail = mails[index];
-                              return Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+            isLoading
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/Recurso2.png',
+                          width: 100,
+                          height: 100,
+                        ),
+                        const SizedBox(height: 20),
+                        const LinearProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                          minHeight: 5,
+                        ),
+                      ],
+                    ),
+                  )
+                : mails.isEmpty
+                    ? Expanded(
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 2),
                                 ),
-                                child: ListTile(
-                                  title: Text(
-                                    mail.sender ?? "No title",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                              ],
+                            ),
+                            child: const Text(
+                              'No hay correspondencia para mostrar',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepPurple,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: ListView.separated(
+                            itemCount: mails.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index < mails.length) {
+                                final mail = mails[index];
+                                return Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Tipo: ${mail.type}",
-                                          style: TextStyle(color: Colors.grey)),
-                                      Text(
-                                        "Estado: ${mail.status == 1 ? 'Almacenado' : 'Entregado'}",
-                                        style: TextStyle(
-                                            color: mail.status == 1
-                                                ? Colors.red
-                                                : Colors.green),
-                                      ),
-                                      Text(
-                                          "Fecha: ${formatDate(mail.dateTime!)}"),
-                                    ],
-                                  ),
-                                  trailing: mail.status == 1
-                                      ? ElevatedButton(
-                                          onPressed: () {
-                                            _showMarkAsReceivedDialog(mail);
-                                          },
-                                          child: const Text(
-                                              "Marcar como Recibido"),
-                                        )
-                                      : Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.green.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                          ),
-                                          child: const Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                          ),
+                                  child: ListTile(
+                                    title: Text(
+                                      mail.sender ?? "No title",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Tipo: ${mail.type}",
+                                            style:
+                                                TextStyle(color: Colors.grey)),
+                                        Text(
+                                          "Estado: ${mail.status == 1 ? 'Almacenado' : 'Entregado'}",
+                                          style: TextStyle(
+                                              color: mail.status == 1
+                                                  ? Colors.red
+                                                  : Colors.green),
                                         ),
-                                ),
-                              );
-                            } else {
-                              return Center(
-                                child: ElevatedButton(
-                                  onPressed: loadMoreMails,
-                                  child: const Text('Ver más'),
-                                ),
-                              );
-                            }
-                          },
-                          separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
+                                        Text(
+                                            "Fecha: ${formatDate(mail.dateTime!)}"),
+                                      ],
+                                    ),
+                                    trailing: mail.status == 1
+                                        ? ElevatedButton(
+                                            onPressed: () {
+                                              _showMarkAsReceivedDialog(mail);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 20),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.check,
+                                                    color: Colors.green,
+                                                    size: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 5),
+                                                const Text(
+                                                  'Recibir',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            child: const Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: ElevatedButton(
+                                    onPressed: loadMoreMails,
+                                    child: const Text('Ver más'),
+                                  ),
+                                );
+                              }
+                            },
+                            separatorBuilder: (context, index) => Divider(
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-        ],
+          ],
+        ),
       ),
     );
   }
