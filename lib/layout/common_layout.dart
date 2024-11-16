@@ -2,6 +2,7 @@ import 'package:community/models/User.dart';
 import 'package:community/providers/user_provider.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
+import 'package:community/screens/mail_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class _CommonLayoutState extends State<CommonLayout> {
   final Map<int, String> _routes = {
     0: '/home',
     1: '/apartment',
+    2: '/mail'
   };
 
   late final Widget body;
@@ -174,6 +176,9 @@ class _CommonLayoutState extends State<CommonLayout> {
                       break;
                     case '/apartment':
                       builder = (context) => const ApartmentScreen();
+                      break;
+                    case '/mail':
+                      builder = (context) => const MailScreen();
                       break;
                     default:
                       builder = (BuildContext _) => const HomePage();
