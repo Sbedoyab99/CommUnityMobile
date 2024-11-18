@@ -3,6 +3,7 @@ import 'package:community/providers/user_provider.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
 import 'package:community/screens/mail_screen.dart';
+import 'package:community/screens/visitor_entry_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,8 +24,10 @@ class _CommonLayoutState extends State<CommonLayout> {
 
   final Map<int, String> _routes = {
     0: '/home',
-    1: '/apartment',
-    2: '/mail'
+    1: '/visitorEntry',
+    2: '/mail',
+    3: '/pqrs',
+    4: '/apartment'
   };
 
   late final Widget body;
@@ -142,8 +145,8 @@ class _CommonLayoutState extends State<CommonLayout> {
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_selectedIndex != 1) {
-                      _onItemTapped(1);
+                    if (_selectedIndex != 4) {
+                      _onItemTapped(4);
                     }
                   },
                   icon: const Icon(Icons.person),
@@ -174,11 +177,14 @@ class _CommonLayoutState extends State<CommonLayout> {
                     case '/home':
                       builder = (context) => const HomePage();
                       break;
-                    case '/apartment':
-                      builder = (context) => const ApartmentScreen();
+                    case '/visitorEntry':
+                      builder = (context) => const VisitorEntryScreen();
                       break;
                     case '/mail':
                       builder = (context) => const MailScreen();
+                      break;
+                    case '/apartment':
+                      builder = (context) => const ApartmentScreen();
                       break;
                     default:
                       builder = (BuildContext _) => const HomePage();
@@ -210,6 +216,10 @@ class _CommonLayoutState extends State<CommonLayout> {
             BottomNavigationBarItem(
               icon: Icon(Icons.note_add),
               label: 'PQRS',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.build),
+              label: 'Apartments',
             ),
           ],
           onTap: (index) {
