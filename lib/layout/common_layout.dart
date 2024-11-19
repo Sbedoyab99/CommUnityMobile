@@ -3,7 +3,6 @@ import 'package:community/providers/user_provider.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
 import 'package:community/screens/mail_screen.dart';
-import 'package:community/screens/visitor_entry_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -144,6 +143,15 @@ class _CommonLayoutState extends State<CommonLayout> {
                   ),
                 ),
                 IconButton(
+                  onPressed: () {
+                    if (_selectedIndex != 1) {
+                      _onItemTapped(1);
+                    }
+                  },
+                  icon: const Icon(Icons.person),
+                  color: Colors.white,
+                ),
+                IconButton(
                   onPressed: () => _openLogOutModal(context),
                   icon: const Icon(Icons.logout),
                   color: Colors.white,
@@ -173,6 +181,9 @@ class _CommonLayoutState extends State<CommonLayout> {
                       break;
                     case '/mail':
                       builder = (context) => const MailScreen();
+                      break;
+                    case '/pqrs':
+                      builder = (context) => const PqrsScreen();
                       break;
                     case '/apartment':
                       builder = (context) => const ApartmentScreen();

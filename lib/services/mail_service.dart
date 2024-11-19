@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import '../dto/MailDTO.dart';
+import '../dto/mail_dto.dart';
 
 class MailService {
   final String apiUrl = 'https://communitybackend.azurewebsites.net/api/mail';
 
   Future<List<Mail>> fetchMail(
       String token, num apartmentId, String status, {int page = 1}) async {
-    print(status);
 
     final response = await http.get(
       Uri.parse(
@@ -21,6 +20,7 @@ class MailService {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
       List<dynamic> mailsJson = jsonDecode(response.body);
       return mailsJson.map((json) => Mail.fromJson(json)).toList();
     } else {
@@ -31,8 +31,6 @@ class MailService {
 
   Future<bool> editMail(String? token, MailDTO mailDTO) async {
     try {
-      //print('editMail - mailDTO: $mailDTO');
-
       final response = await http.put(
         Uri.parse('$apiUrl/updateStatus'),
         headers: {

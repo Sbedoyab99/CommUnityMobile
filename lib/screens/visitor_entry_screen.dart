@@ -516,6 +516,4 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
       );
     }
   }
-
-
 }
