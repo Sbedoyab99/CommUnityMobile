@@ -344,7 +344,8 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Cancelar Visita"),
-          content: const Text("¿Estás seguro de que deseas cancelar esta visita?"),
+          content:
+              const Text("¿Estás seguro de que deseas cancelar esta visita?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -367,18 +368,19 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
 
   Future<void> _cancelVisitorEntry(VisitorEntry visitorEntry) async {
     if (token == null) {
-           return;
+      return;
     }
     VisitorEntryDTO visitorEntryDTO = VisitorEntryDTO(
-      id: visitorEntry.id,
-      name: visitorEntry.name ?? '',
-      plate: visitorEntry.plate,
-      date: DateTime.parse(visitorEntry.dateTime!),
-      status: 2, apartmentId: user!.apartmentId!
-    );
+        id: visitorEntry.id,
+        name: visitorEntry.name ?? '',
+        plate: visitorEntry.plate,
+        date: DateTime.parse(visitorEntry.dateTime!),
+        status: 2,
+        apartmentId: user!.apartmentId!);
 
     try {
-      bool success = await _visitorEntryService.cancelVisitorEntry(token!, visitorEntryDTO);
+      bool success = await _visitorEntryService.cancelVisitorEntry(
+          token!, visitorEntryDTO);
 
       if (success) {
         setState(() {
@@ -429,13 +431,15 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Placa (opcional)'),
+                  decoration:
+                      const InputDecoration(labelText: 'Placa (opcional)'),
                   onSaved: (value) {
                     plate = value;
                   },
                 ),
                 ListTile(
-                  title: Text("Fecha: ${DateFormat('dd/MM/yyyy').format(selectedDate)}"),
+                  title: Text(
+                      "Fecha: ${DateFormat('dd/MM/yyyy').format(selectedDate)}"),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -477,7 +481,8 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
     );
   }
 
-  Future<void> _addVisitorEntry(String name, String? plate, DateTime date) async {
+  Future<void> _addVisitorEntry(
+      String name, String? plate, DateTime date) async {
     if (token == null) {
       return;
     }
@@ -491,16 +496,19 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
     );
 
     try {
-      bool success = await _visitorEntryService.scheduleVisitor(token!, visitorEntryDTO);
+      bool success =
+          await _visitorEntryService.scheduleVisitor(token!, visitorEntryDTO);
 
       if (success) {
         setState(() {
-          visitorEntries.insert(0, VisitorEntry(
-            name: name,
-            plate: plate ?? '',
-            dateTime: date.toIso8601String(),
-            status: 0,
-          ));
+          visitorEntries.insert(
+              0,
+              VisitorEntry(
+                name: name,
+                plate: plate ?? '',
+                dateTime: date.toIso8601String(),
+                status: 0,
+              ));
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Visita añadida con éxito')),

@@ -2,6 +2,8 @@ import 'package:community/models/User.dart';
 import 'package:community/providers/user_provider.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
+import 'package:community/screens/pqrs_screen.dart';
+import 'package:community/screens/visitor_entry_screen.dart';
 import 'package:community/screens/mail_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +117,7 @@ class _CommonLayoutState extends State<CommonLayout> {
     );
   }
 
-  @override
+  /* @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -229,6 +231,322 @@ class _CommonLayoutState extends State<CommonLayout> {
               _onItemTapped(index);
             }
           },
+        ),
+      ),
+    );
+  }*/
+
+  /* @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            height: 160,
+            decoration: BoxDecoration(
+              color: Colors.deepPurple[700],
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 60.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14, // Texto más pequeño
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (_selectedIndex != 1) {
+                        _onItemTapped(1);
+                      }
+                    },
+                    icon: const Icon(Icons.person),
+                    color: Colors.white,
+                  ),
+                  IconButton(
+                    onPressed: () => _openLogOutModal(context),
+                    icon: const Icon(Icons.logout),
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : UserProvider(
+              user: user,
+              child: Navigator(
+                key: GlobalKey<NavigatorState>(),
+                initialRoute: _routes[_selectedIndex],
+                onGenerateRoute: (settings) {
+                  WidgetBuilder builder;
+                  switch (settings.name) {
+                    case '/home':
+                      builder = (context) => const HomePage();
+                      break;
+                    case '/visitorEntry':
+                      builder = (context) => const VisitorEntryScreen();
+                      break;
+                    case '/mail':
+                      builder = (context) => const MailScreen();
+                      break;
+                    case '/pqrs':
+                      builder = (context) => const PqrsScreen();
+                      break;
+                    case '/apartment':
+                      builder = (context) => const ApartmentScreen();
+                      break;
+                    default:
+                      builder = (BuildContext _) => const HomePage();
+                  }
+                  return MaterialPageRoute(
+                      builder: builder, settings: settings);
+                },
+              ),
+            ),
+      bottomNavigationBar: SafeArea(
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          child: BottomNavigationBar(
+              backgroundColor: Colors.deepPurple[700],
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white.withOpacity(0.7),
+              showSelectedLabels: true,
+              showUnselectedLabels: false,
+              currentIndex: _selectedIndex,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people),
+                  label: 'Visitas',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.mail),
+                  label: 'Correspondencia',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.note_add),
+                  label: 'PQRS',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Apartamento',
+                ),
+              ],
+              onTap: (index) {
+                if (_selectedIndex != index) {
+                  _onItemTapped(index);
+                }
+              },
+              selectedLabelStyle: const TextStyle(
+                fontSize:
+                    9,
+              )),
+        ),
+      ),
+    );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            height: 160,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.deepPurple[700]!, Colors.deepPurple[400]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 60.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      isLoading ? 'Cargando...' : user!.residentialUnit!.name!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      onPressed: () {
+                        if (_selectedIndex != 1) {
+                          _onItemTapped(1);
+                        }
+                      },
+                      icon: const Icon(Icons.person),
+                      color: Colors.deepPurple[700],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: IconButton(
+                      onPressed: () => _openLogOutModal(context),
+                      icon: const Icon(Icons.logout),
+                      color: Colors.deepPurple[700],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : UserProvider(
+              user: user,
+              child: Navigator(
+                key: GlobalKey<NavigatorState>(),
+                initialRoute: _routes[_selectedIndex],
+                onGenerateRoute: (settings) {
+                  WidgetBuilder builder;
+                  switch (settings.name) {
+                    case '/home':
+                      builder = (context) => const HomePage();
+                      break;
+                    case '/visitorEntry':
+                      builder = (context) => const VisitorEntryScreen();
+                      break;
+                    case '/mail':
+                      builder = (context) => const MailScreen();
+                      break;
+                    case '/pqrs':
+                      builder = (context) => const PqrsScreen();
+                      break;
+                    case '/apartment':
+                      builder = (context) => const ApartmentScreen();
+                      break;
+                    default:
+                      builder = (BuildContext _) => const HomePage();
+                  }
+                  return MaterialPageRoute(
+                      builder: builder, settings: settings);
+                },
+              ),
+            ),
+      bottomNavigationBar: SafeArea(
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.deepPurple[700],
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(0.7),
+            showSelectedLabels: true,
+            showUnselectedLabels: false,
+            currentIndex: _selectedIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: 'Visitas',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.mail),
+                label: 'Correspondencia',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.note_add),
+                label: 'PQRS',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Apartamento',
+              ),
+            ],
+            onTap: (index) {
+              if (_selectedIndex != index) {
+                _onItemTapped(index);
+              }
+            },
+            selectedLabelStyle: const TextStyle(
+              fontSize: 9,
+              fontWeight:
+                  FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontSize: 10,
+            ),
+          ),
         ),
       ),
     );
