@@ -3,9 +3,12 @@ import 'package:community/providers/user_provider.dart';
 import 'package:community/screens/apartment_screen.dart';
 import 'package:community/screens/home_screen.dart';
 import 'package:community/screens/mail_screen.dart';
+import 'package:community/screens/visitor_entry_screen.dart';
 import 'package:community/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../screens/pqrs_screen.dart';
 
 class CommonLayout extends StatefulWidget {
   const CommonLayout({super.key});
@@ -24,7 +27,8 @@ class _CommonLayoutState extends State<CommonLayout> {
   final Map<int, String> _routes = {
     0: '/home',
     1: '/apartment',
-    2: '/mail'
+    2: '/mail',
+    3: '/pqrs',
   };
 
   late final Widget body;
@@ -75,6 +79,7 @@ class _CommonLayoutState extends State<CommonLayout> {
   }
 
   void _onItemTapped(int index) {
+    print(index);
     setState(() {
       _selectedIndex = index;
     });
@@ -179,6 +184,9 @@ class _CommonLayoutState extends State<CommonLayout> {
                       break;
                     case '/mail':
                       builder = (context) => const MailScreen();
+                      break;
+                    case '/pqrs':
+                      builder = (context) => const PqrsScreen();
                       break;
                     default:
                       builder = (BuildContext _) => const HomePage();
