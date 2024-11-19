@@ -144,15 +144,6 @@ class _CommonLayoutState extends State<CommonLayout> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    if (_selectedIndex != 4) {
-                      _onItemTapped(4);
-                    }
-                  },
-                  icon: const Icon(Icons.person),
-                  color: Colors.white,
-                ),
-                IconButton(
                   onPressed: () => _openLogOutModal(context),
                   icon: const Icon(Icons.logout),
                   color: Colors.white,
@@ -218,8 +209,8 @@ class _CommonLayoutState extends State<CommonLayout> {
               label: 'PQRS',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.build),
-              label: 'Apartments',
+              icon: Icon(Icons.person),
+              label: 'Apartamento',
             ),
           ],
           onTap: (index) {
