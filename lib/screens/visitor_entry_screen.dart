@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../dto/visitor_entry_dto.dart';
-import '../models/User.dart';
-import '../services/auth_service.dart';
+import 'package:community/dto/visitor_entry_dto.dart';
+import 'package:community/models/User.dart';
+import 'package:community/services/auth_service.dart';
 
 class VisitorEntryScreen extends StatefulWidget {
   const VisitorEntryScreen({super.key});

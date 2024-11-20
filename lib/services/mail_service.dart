@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-import '../dto/mail_dto.dart';
+import 'package:community/dto/mail_dto.dart';
 
 class MailService {
-  final String apiUrl = 'https://communitybackend.azurewebsites.net/api/mail';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net/api/mail';
 
   Future<List<Mail>> fetchMail(
       String token, num apartmentId, String status, {int page = 1}) async {

@@ -3,7 +3,7 @@ import 'package:community/models/User.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  final String apiUrl = 'https://communitybackend.azurewebsites.net/api/resident';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net/api/resident';
 
   Future<List<User>> fetchUsers(String token, num apartmentId) async {
     final response = await http.get(

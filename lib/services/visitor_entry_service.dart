@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../dto/visitor_entry_dto.dart';
-import '../models/VisitorEntry.dart';
+import 'package:community/dto/visitor_entry_dto.dart';
+import 'package:community/models/VisitorEntry.dart';
 
 class VisitorEntryService {
   final String apiUrl =
-      'https://communitybackend.azurewebsites.net/api/VisitorEntry';
+      'https://community-back-end.azurewebsites.net/api/VisitorEntry';
 
   Future<List<VisitorEntry>> fetchVisitorEntriesByApartment(
       String token, num apartmentId, String status,

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String _baseUrl = "https://communitybackend.azurewebsites.net/api";
+  final String _baseUrl = "https://community-back-end.azurewebsites.net/api";
 
   Future<String?> login(String email, String password) async {
     try {
