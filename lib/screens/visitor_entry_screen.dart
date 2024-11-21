@@ -214,7 +214,7 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           child: ListView.separated(
-                            itemCount: visitorEntries.length + 1,
+                            itemCount: visitorEntries.length + (visitorEntries.length >= 5?1:0),
                             itemBuilder: (context, index) {
                               if (index < visitorEntries.length) {
                                 final visitorEntry = visitorEntries[index];
