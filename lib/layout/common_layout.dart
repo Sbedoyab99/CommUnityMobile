@@ -404,10 +404,10 @@ class _CommonLayoutState extends State<CommonLayout> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
+              // borderRadius: const BorderRadius.only(
+              //   bottomLeft: Radius.circular(30),
+              //   bottomRight: Radius.circular(30),
+              // ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4),
@@ -435,26 +435,11 @@ class _CommonLayoutState extends State<CommonLayout> {
                       ),
                     ),
                   ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      onPressed: () {
-                        if (_selectedIndex != 1) {
-                          _onItemTapped(1);
-                        }
-                      },
-                      icon: const Icon(Icons.person),
-                      color: Colors.deepPurple[700],
-                    ),
-                  ),
                   const SizedBox(width: 16),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      onPressed: () => _openLogOutModal(context),
-                      icon: const Icon(Icons.logout),
-                      color: Colors.deepPurple[700],
-                    ),
+                  IconButton(
+                    onPressed: () => _openLogOutModal(context),
+                    icon: const Icon(Icons.logout),
+                    color: Colors.white,
                   ),
                 ],
               ),
