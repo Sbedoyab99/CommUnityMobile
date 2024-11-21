@@ -1,6 +1,7 @@
 import 'package:community/models/Mail.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../dto/mail_dto.dart';
 

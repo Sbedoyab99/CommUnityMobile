@@ -5,7 +5,7 @@ import 'package:community/models/Pet.dart';
 import 'package:http/http.dart' as http;
 
 class PetService {
-  final String apiUrl = 'https://community-back-end.azurewebsites.net//api/pets';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net/api/pets';
 
   Future<List<Pet>> fetchPets(String token, num apartmentId) async {
     final response = await http.get(

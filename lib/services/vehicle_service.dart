@@ -4,7 +4,7 @@ import 'package:community/models/Vehicle.dart';
 import 'package:http/http.dart' as http;
 
 class VehicleService {
-  final String apiUrl = 'https://community-back-end.azurewebsites.net//api/vehicles';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net/api/vehicles';
 
   Future<List<Vehicle>> fetchVehicles(String token, num apartmentId) async {
     final response = await http.get(
