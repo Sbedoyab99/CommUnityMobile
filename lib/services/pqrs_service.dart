@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../dto/pqrs_dto.dart';
 
 class PqrsService {
-  final String apiUrl = 'https://communitybackend.azurewebsites.net/api/Pqrss';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net//api/Pqrss';
 
   Future<List<Pqrs>> fetchMail(String token, num residentialUnitId, String type,
       String status, num apartmentId,

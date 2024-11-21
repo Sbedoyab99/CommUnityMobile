@@ -6,14 +6,13 @@ import '../dto/visitor_entry_dto.dart';
 import '../models/VisitorEntry.dart';
 
 class VisitorEntryService {
-  final String apiUrl =
-      'https://communitybackend.azurewebsites.net/api/VisitorEntry';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net/api/VisitorEntry';
 
   Future<List<VisitorEntry>> fetchVisitorEntriesByApartment(
       String token, num apartmentId, String status,
       {int page = 1}) async {
     final response = await http.get(
-      Uri.parse('$apiUrl/apartment/$apartmentId'),
+      Uri.parse('$apiUrl/VisitorEntryApartmentStatus?Id=$apartmentId&status=$status&page=$page&recordsnumber=5'),
       headers: {
         'Authorization': 'Bearer $token',
       },

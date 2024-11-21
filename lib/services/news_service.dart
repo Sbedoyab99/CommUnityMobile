@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NewsService {
-  final String apiUrl = 'https://communitybackend.azurewebsites.net/api/news';
+  final String apiUrl = 'https://community-back-end.azurewebsites.net//api/news';
 
   Future<List<News>> fetchNews(String token, num residentialUnitId) async {
     final response = await http.get(

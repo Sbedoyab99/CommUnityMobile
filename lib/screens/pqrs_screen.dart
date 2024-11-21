@@ -169,7 +169,7 @@ class _PqrsScreenState extends State<PqrsScreen> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                 color: Colors.deepPurple.shade200,
                 borderRadius: BorderRadius.circular(10),
@@ -200,7 +200,7 @@ class _PqrsScreenState extends State<PqrsScreen> {
                                 ))
                             .toList(),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4),
                       DropdownMenu<String>(
                         label: const Text('Estado',
                             style: TextStyle(color: Colors.white)),
@@ -362,6 +362,7 @@ class _PqrsScreenState extends State<PqrsScreen> {
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.deepPurple.shade400,
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -498,7 +499,7 @@ class _PqrsScreenState extends State<PqrsScreen> {
                                   (Map<int, String> item) =>
                                       DropdownMenuItem<int>(
                                         value: item.keys.first,
-                                        child: Text(item.values.first!),
+                                        child: Text(item.values.first),
                                       ))
                               .toList(),
                           decoration: const InputDecoration(

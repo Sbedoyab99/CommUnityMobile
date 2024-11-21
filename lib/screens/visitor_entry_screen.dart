@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dto/visitor_entry_dto.dart';
+import '../helper_enum/VisitorStateColorHelper.dart';
+import '../helper_enum/VisitorStateHelper.dart';
 import '../models/User.dart';
 import '../services/auth_service.dart';
 
@@ -105,9 +107,10 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
     return DateFormat('dd/MM/yyyy').format(dateTime);
   }
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
@@ -118,222 +121,478 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
-              color: Colors.deepPurpleAccent.shade100,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.shade200,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.people_alt,
-                    color: Colors.white,
-                    size: 36,
+                  const Row(
+                    children: [
+                      Icon(Icons.people_alt, color: Colors.white, size: 36),
+                      SizedBox(width: 10),
+                      Text(
+                        "Visitas",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    "Visitas",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  DropdownMenu<String>(
+                    label: const Text(
+                      'Estado',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: DropdownMenu<String>(
-                      label: const Text('Estado'),
-                      initialSelection: dropdownItems.first['value']!,
-                      onSelected: (String? value) {
-                        if (value != null) {
-                          setState(() {
-                            filterValue = value;
-                            currentPage = 1;
-                          });
-                          loadVisitorEntry();
-                        }
-                      },
-                      dropdownMenuEntries: dropdownItems
-                          .map((item) => DropdownMenuEntry<String>(
-                                value: item['value']!,
-                                label: item['label']!,
-                              ))
-                          .toList(),
-                    ),
+                    initialSelection: dropdownItems.first['value']!,
+                    onSelected: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          filterValue = value;
+                          currentPage = 1;
+                        });
+                        loadVisitorEntry();
+                      }
+                    },
+                    dropdownMenuEntries: dropdownItems
+                        .map((item) => DropdownMenuEntry<String>(
+                              value: item['value']!,
+                              label: item['label']!,
+                            ))
+                        .toList(),
                   ),
                 ],
               ),
             ),
-            isLoading
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/Recurso2.png',
-                          width: 100,
-                          height: 100,
-                        ),
-                        const SizedBox(height: 20),
-                        const LinearProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                          minHeight: 5,
-                        ),
-                      ],
-                    ),
-                  )
-                : visitorEntries.isEmpty
-                    ? Expanded(
-                        child: Center(
+            Expanded(
+              child: isLoading
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/Recurso2.png',
+                            width: 100,
+                            height: 100,
+                          ),
+                          const SizedBox(height: 20),
+                          const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.deepPurpleAccent),
+                          ),
+                        ],
+                      ),
+                    )
+                  : visitorEntries.isEmpty
+                      ? Center(
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 2),
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
                                 ),
                               ],
                             ),
-                            child: const Text(
-                              'No hay visitas para mostrar',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.deepPurple,
-                              ),
-                              textAlign: TextAlign.center,
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.info,
+                                    size: 50, color: Colors.deepPurple),
+                                SizedBox(height: 10),
+                                Text(
+                                  'No hay visitas para mostrar',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurple,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      )
-                    : Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          child: ListView.separated(
-                            itemCount: visitorEntries.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index < visitorEntries.length) {
-                                final visitorEntry = visitorEntries[index];
-                                return Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                        )
+                      : ListView.separated(
+                          itemCount: visitorEntries.length +
+                              (visitorEntries.length >= 5 ? 1 : 0),
+                          padding: const EdgeInsets.all(12),
+                          itemBuilder: (context, index) {
+                            if (index < visitorEntries.length) {
+                              final visitorEntry = visitorEntries[index];
+                              return Card(
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    "Visitante: ${visitorEntry.name ?? "Sin nombre"}",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  child: ListTile(
-                                    title: Text(
-                                      "Visitante: ${visitorEntry.name ?? "No title"} ",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "Placa: ${visitorEntry.plate ?? "Sin vehículo"} ",
-                                            style: const TextStyle(
-                                                color: Colors.grey)),
-                                        Text(
-                                          "Estado: ${visitorEntry.status == 0 ? 'Programado' : visitorEntry.status == 1 ? 'Aprobado' : 'Cancelado'}",
-                                          style: TextStyle(
-                                            color: visitorEntry.status == 0
-                                                ? Colors.orangeAccent
-                                                : visitorEntry.status == 1
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                          ),
-                                        ),
-                                        Text(
-                                            "Fecha: ${formatDate(visitorEntry.dateTime!)}"),
-                                      ],
-                                    ),
-                                    trailing: (visitorEntry.status == 0 || visitorEntry.status == 1)
-                                        ? ElevatedButton(
-                                            onPressed: () {
-                                              _showMarkAsCanceledDialog(
-                                                  visitorEntry);
-                                            },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: visitorEntry.status == 0
-                                            ? Colors.orange
-                                            : (visitorEntry.status == 1 ?
-                                        Colors.green : Colors.grey),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10,
-                                            horizontal: 20),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Placa: ${visitorEntry.plate ?? "Sin vehículo"}",
+                                        style: const TextStyle(
+                                            color: Colors.black54),
                                       ),
-
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(2),
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Colors.white,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    color: visitorEntry.status == 0 ?
-                                                    Colors.orange : Colors.green,
-                                                    size: 20,
-                                                  ),
-
-                                                ),
-                                                const SizedBox(width: 5),
-                                                const Text(
-                                                  'Cancelar',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red.shade100,
+                                      Text(
+                                        "Estado: ${VisitorStateHelper.getDescription(visitorEntry.status)}",
+                                        style: TextStyle(
+                                          color:
+                                              VisitorStateColorHelper.getColor(
+                                                  visitorEntry.status),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Fecha: ${formatDate(visitorEntry.dateTime!)}",
+                                        style: const TextStyle(
+                                            color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: visitorEntry.status != 2
+                                      ? ElevatedButton.icon(
+                                          onPressed: () {
+                                            _showMarkAsCanceledDialog(
+                                                visitorEntry);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                visitorEntry.status == 0
+                                                    ? Colors.orange
+                                                    : Colors.green,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 20),
+                                            shape: RoundedRectangleBorder(
                                               borderRadius:
-                                              BorderRadius.circular(30),
-                                            ),
-                                            child: const Icon(
-                                              Icons.close,
-                                              color: Colors.red,
+                                                  BorderRadius.circular(10),
                                             ),
                                           ),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: ElevatedButton(
-                                    onPressed: loadMoreVisitorEntries,
-                                    child: const Text('Ver más'),
-                                  ),
-                                );
-                              }
-                            },
-                            separatorBuilder: (context, index) => Divider(
-                              color: Colors.grey.shade300,
-                              thickness: 1,
-                            ),
+                                          icon: const Icon(Icons.close,
+                                              size: 18, color: Colors.white),
+                                          label: const Text(
+                                            'Cancelar',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ),
+                              );
+                            } else {
+                              return visitorEntries.length >= 5
+                                  ? Center(
+                                      child: ElevatedButton.icon(
+                                        onPressed: loadMoreVisitorEntries,
+                                        icon: const Icon(Icons.add_circle),
+                                        label: const Text('Ver más'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.deepPurple.shade400,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 20),
+                                        ),
+                                      ),
+                                    )
+                                  : Container();
+                            }
+                          },
+                          separatorBuilder: (context, index) => Divider(
+                            color: Colors.grey.shade300,
+                            thickness: 1,
                           ),
                         ),
-                      ),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddVisitorDialog();
+        onPressed: _showAddVisitorDialog,
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.deepPurple.shade400,
+        foregroundColor: Colors.white,
+      ),
+    );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            currentPage = 1;
+          });
+          await loadVisitorEntry();
         },
-        child: const Icon(Icons.add_circle_outline),
-        backgroundColor: Colors.deepPurpleAccent.shade100,
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.shade200,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.people_alt, color: Colors.white, size: 36),
+                      SizedBox(width: 10),
+                      Text(
+                        "Visitas",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  DropdownMenu<String>(
+                    label: const Text(
+                      'Estado',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    initialSelection: dropdownItems.first['value']!,
+                    onSelected: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          filterValue = value;
+                          currentPage = 1;
+                        });
+                        loadVisitorEntry();
+                      }
+                    },
+                    dropdownMenuEntries: dropdownItems
+                        .map((item) => DropdownMenuEntry<String>(
+                              value: item['value']!,
+                              label: item['label']!,
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: isLoading
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/Recurso2.png',
+                            width: 100,
+                            height: 100,
+                          ),
+                          const SizedBox(height: 20),
+                          const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.deepPurpleAccent),
+                          ),
+                        ],
+                      ),
+                    )
+                  : visitorEntries.isEmpty
+                      ? Center(
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.info,
+                                    size: 50, color: Colors.deepPurple),
+                                SizedBox(height: 10),
+                                Text(
+                                  'No hay visitas para mostrar',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurple,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : ListView.separated(
+                          itemCount: visitorEntries.length +
+                              (visitorEntries.length >= 5 ? 1 : 0),
+                          padding: const EdgeInsets.all(12),
+                          itemBuilder: (context, index) {
+                            if (index < visitorEntries.length) {
+                              final visitorEntry = visitorEntries[index];
+                              return Card(
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Visitante: ${visitorEntry.name ?? "Sin nombre"}",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              "Placa: ${visitorEntry.plate ?? "Sin vehículo"}",
+                                              style: const TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                            Text(
+                                              "Estado: ${VisitorStateHelper.getDescription(visitorEntry.status)}",
+                                              style: TextStyle(
+                                                color: VisitorStateColorHelper
+                                                    .getColor(
+                                                        visitorEntry.status),
+                                              ),
+                                            ),
+                                            Text(
+                                              "Fecha: ${formatDate(visitorEntry.dateTime!)}",
+                                              style: const TextStyle(
+                                                  color: Colors.black54),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      visitorEntry.status != 2
+                                          ? SizedBox(
+                                              width:
+                                                  150,
+                                              child: ElevatedButton.icon(
+                                                onPressed: () {
+                                                  _showMarkAsCanceledDialog(
+                                                      visitorEntry);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      visitorEntry.status == 0
+                                                          ? Colors.orange
+                                                          : Colors.green,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 20),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                icon: const Icon(Icons.close,
+                                                    size: 18,
+                                                    color: Colors.white),
+                                                label: const Text(
+                                                  'Cancelar',
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return visitorEntries.length >= 5
+                                  ? Center(
+                                      child: ElevatedButton.icon(
+                                        onPressed: loadMoreVisitorEntries,
+                                        icon: const Icon(Icons.add_circle),
+                                        label: const Text('Ver más'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.deepPurple.shade400,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12, horizontal: 20),
+                                        ),
+                                      ),
+                                    )
+                                  : Container();
+                            }
+                          },
+                          separatorBuilder: (context, index) => Divider(
+                            color: Colors.grey.shade300,
+                            thickness: 1,
+                          ),
+                        ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddVisitorDialog,
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.deepPurple.shade400,
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -498,6 +757,8 @@ class _VisitorEntryScreenState extends State<VisitorEntryScreen> {
     try {
       bool success =
           await _visitorEntryService.scheduleVisitor(token!, visitorEntryDTO);
+
+      if (!mounted) return;
 
       if (success) {
         setState(() {
